@@ -2,17 +2,19 @@
 import { Router } from "express";
 
 //* Controllers
-import { getGames } from "../controllers/gamesController.js";
+import { getGames, registerGame } from "../controllers/gamesController/gamesController.js";
 
 //* Middlewares
 import { validateSchema } from "../middlewares/validateSchema.js";
 
 //* Schemas 
-import { gameSchema } from "../schemas/gameSchema.js";
+import { registerGameSchema } from "../schemas/registerGameSchema.js";
 
 const gamesRouter = Router()
 
 //! Verify need to insert validate token below
 gamesRouter.get('/games', getGames)
+
+gamesRouter.post('/games', validateSchema(registerGameSchema), registerGame)
 
 export default gamesRouter
