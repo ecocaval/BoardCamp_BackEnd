@@ -1,4 +1,4 @@
-// Configs
+//* Configs
 import { db } from "../config/database.connection.js"
 
 export async function validateGameName(req, res, next) {
