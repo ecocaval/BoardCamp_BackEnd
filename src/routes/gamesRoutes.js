@@ -3,8 +3,8 @@ import { Router } from "express";
 
 //* Controllers
 import { getGames, registerGame } from "../controllers/gamesController/gamesController.js";
-import { validateGameBody } from "../middlewares/validateGameBody.js";
-import { validateGameName } from "../middlewares/validateGameName.js";
+import { validateGameBody } from "../middlewares/games/validateGameBody.js";
+import { validateGameName } from "../middlewares/games/validateGameName.js";
 
 //* Middlewares
 import { validateSchema } from "../middlewares/validateSchema.js";
