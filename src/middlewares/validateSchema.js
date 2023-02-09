@@ -9,7 +9,7 @@ export function validateSchema(schema) {
         const { error } = schema.validate(req.sanitizedBody, { abortEarly: false })
 
         if (error) {
-            const errorMessage = error.details.map(err => err.message).join(", ").replaceAll(" is required", "") + " is required"
+            const errorMessage = error.details.map(err => err.message).join(", ")
             return res.status(422).json({ message: errorMessage })
         }
 
