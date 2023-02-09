@@ -2,7 +2,7 @@
 import { Router } from "express";
 
 //* Controllers
-import { getCustomers, registerCostumer } from "../controllers/customersController/customersController.js";
+import { getCustomerById, getCustomers, registerCostumer } from "../controllers/customersController/customersController.js";
 
 //* Middlewares
 import { validateSchema } from "../middlewares/validateSchema.js";
@@ -12,10 +12,12 @@ import { validateCustomerCpf } from "../middlewares/customers/validateCustomerCp
 //* Schemas
 import { registerCustomerSchema } from "../schemas/registerCustomerSchema.js";
 
-const customerRoutes = Router()
+const customerRouter = Router()
 
-customerRoutes.get("/customers", getCustomers)
+customerRouter.get("/customers", getCustomers)
 
-customerRoutes.post("/customers", validateSchema(registerCustomerSchema), validateCustomerBody, validateCustomerCpf, registerCostumer)
+customerRouter.get("/customers/:id", getCustomerById)
 
-export default customerRoutes
+customerRouter.post("/customers", validateSchema(registerCustomerSchema), validateCustomerBody, validateCustomerCpf, registerCostumer)
+
+export default customerRouter

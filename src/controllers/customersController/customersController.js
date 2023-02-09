@@ -8,7 +8,24 @@ export async function getCustomers(_, res) {
 
     } catch (err) {
         console.log(err)
-        return res.sendStatus(500)  
+        return res.sendStatus(500)
+    }
+}
+
+export async function getCustomerById(req, res) {
+
+    const { id } = structuredClone(req.params)
+
+    try {
+        const costumer = await db.query("SELECT * FROM customers WHERE id = $1 LIMIT 1", [id])
+
+        if(costumer.rowCount === 0) return res.sendStatus(404)
+
+        return res.send(costumer.rows[0])
+
+    } catch (err) {
+        console.log(err)
+        return res.sendStatus(500)
     }
 }
 
