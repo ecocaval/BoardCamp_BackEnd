@@ -3,35 +3,11 @@ import dayjs from "dayjs";
 import { db } from "../../config/database.connection.js";
 import { getGamePricePerDayById } from "../gamesController/utils/getGamePricePerDayById.js";
 import { calculateDaysDiff } from "./utils/calculateDaysDiff..js";
+import { getRentalsQuery } from "./utils/queries/getRentalsQuery.js";
 
 export async function getRentals(_, res) {
     try {
-        const rentals = await db.query(`
-                SELECT
-
-                rentals.id,
-                rentals."customerId",
-                rentals."gameId",
-                rentals."rentDate",
-                rentals."daysRented",
-                rentals."returnDate",
-                rentals."originalPrice",
-                
-                rentals."delayFee",
-                json_build_object(
-                    'id', customers.id,
-                    'name', customers."name"
-                ) AS customer,
-                json_build_object(
-                    'id', games.id,
-                    'name', games."name"
-                ) AS game
-                
-                FROM rentals
-                INNER JOIN customers ON rentals."customerId" = customers.id
-                INNER JOIN games ON rentals."gameId" = games.id;
-            `)
-
+        const rentals = await db.query(getRentalsQuery)
         return res.send(rentals.rows)
 
     } catch (err) {
@@ -48,7 +24,8 @@ export async function registerRental(req, res) {
 
     try {
         await db.query(
-            'INSERT INTO rentals ("customerId", "gameId", "daysRented", "rentDate", "originalPrice") VALUES ($1, $2, $3, $4, $5)',
+            `INSERT INTO rentals ("customerId", "gameId", "daysRented", "rentDate", "originalPrice") 
+            VALUES ($1, $2, $3, $4, $5)`,
             [customerId, gameId, daysRented, rentDate, originalPrice])
         return res.sendStatus(201)
 
@@ -78,6 +55,20 @@ export async function finalizeRental(req, res) {
             WHERE id = $3`,
             [delayFee, returnDate, id]
         )
+        return res.sendStatus(200)
+
+    } catch (err) {
+        console.log(err)
+        return res.sendStatus(500)
+    }
+}
+
+export async function deleteRental(req, res) {
+
+    const { id } = structuredClone(req.params)
+
+    try {
+        await db.query('DELETE FROM rentals WHERE id = $1', [id])
         return res.sendStatus(200)
 
     } catch (err) {
