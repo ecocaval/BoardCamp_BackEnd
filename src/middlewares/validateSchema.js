@@ -10,9 +10,9 @@ export function validateSchema(schema) {
 
         if (error) {
             const errorMessage = error.details.map(err => err.message).join(", ").replaceAll(" is required", "") + " is required"
-            return res.json({ message: errorMessage })
+            return res.status(422).json({ message: errorMessage })
         }
-        
+
         next()
     }
 }
