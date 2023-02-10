@@ -20,6 +20,7 @@ export const getRentalsQuery = `
     ) AS game
 
     FROM rentals
+    
     INNER JOIN customers ON rentals."customerId" = customers.id
-    INNER JOIN games ON rentals."gameId" = games.id;
+    INNER JOIN games ON rentals."gameId" = games.id
 `

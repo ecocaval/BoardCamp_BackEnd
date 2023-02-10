@@ -6,18 +6,29 @@ import { calculateDaysDiff } from "./utils/calculateDaysDiff..js";
 import { getRentalsQuery } from "./utils/queries/getRentalsQuery.js";
 
 export async function getRentals(req, res) {
+    const { customerId, offset, limit } = structuredClone(req.query)
 
-    const { customerId } = structuredClone(req.query)
+    let query = getRentalsQuery
+    let parameters = []
+
+    if (customerId) {
+        query += 'WHERE rentals."customerId" = $1';
+        parameters.push(customerId)
+    }
+
+    if (offset) {
+        query += "OFFSET $" + (parameters.length + 1)
+        parameters.push(offset)
+    }
+
+    if (limit) {
+        query += "LIMIT $" + (parameters.length + 1)
+        parameters.push(limit)
+    }
 
     try {
-        if (customerId) {
-            const games = await db.query('SELECT * FROM rentals WHERE "customerId" = $1', [customerId])
-            return res.send(games.rows)
-        }
-
-        const rentals = await db.query(getRentalsQuery)
+        const rentals = await db.query(query, parameters)
         return res.send(rentals.rows)
-
     } catch (err) {
         console.log(err)
         return res.sendStatus(500)

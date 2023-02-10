@@ -1,9 +1,9 @@
 //* Configs
 import { db } from "../../config/database.connection.js";
 
-export async function getGames(req, res) {
-    
+export async function getGames(req, res) {    
     const { name, offset, limit } = structuredClone(req.query)
+
     let query = "SELECT * FROM games"
     let parameters = []
 
