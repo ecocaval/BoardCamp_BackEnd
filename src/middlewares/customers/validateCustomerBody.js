@@ -1,6 +1,6 @@
 export function validateCustomerBody(req, res, next) {
 
-    const dateRegex = new RegExp("^[0-9]{2}[\/-][0-9]{2}[\/-][0-9]{4}$")
+    const dateRegex = new RegExp("^[0-9]{4}[-][0-9]{2}[-][0-9]{2}$")
 
     const { name, phone, cpf, birthday } = structuredClone(req.sanitizedBody)
 

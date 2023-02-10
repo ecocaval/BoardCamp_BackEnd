@@ -46,6 +46,7 @@ export async function getCustomerById(req, res) {
 
 export async function registerCostumer(req, res) {
     const { name, phone, cpf, birthday } = structuredClone(req.sanitizedBody)
+
     try {
         await db.query(
             "INSERT INTO customers (name, phone, cpf, birthday) VALUES ($1, $2, $3, $4)",
