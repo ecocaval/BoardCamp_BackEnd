@@ -4,15 +4,30 @@ import { buildCustomerQueries } from "./utils/buildCustomerQueries.js";
 
 export async function getCustomers(req, res) {
 
-    const { cpf } = structuredClone(req.query)
+    const { cpf, offset, limit } = structuredClone(req.query)
+
+    let query = "SELECT * FROM customers"
+    let parameters = []
+
+    if (cpf) {
+        query += ' WHERE cpf LIKE $1';
+        parameters.push(`${cpf}`)
+    }
+
+    if (offset) {
+        query += " OFFSET $" + (parameters.length + 1)
+        parameters.push(offset)
+    }
+
+    if (limit) {
+        query += " LIMIT $" + (parameters.length + 1)
+        parameters.push(limit)
+    }
+
+    console.log(query);
 
     try {
-        if (cpf) {
-            const customers = await db.query("SELECT * FROM customers WHERE cpf LIKE $1", [`${cpf}`])
-            return res.send(customers.rows)
-        }
-
-        const customers = await db.query("SELECT * FROM customers")
+        const customers = await db.query(query, parameters)
         return res.send(customers.rows)
 
     } catch (err) {
