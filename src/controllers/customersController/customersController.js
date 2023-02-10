@@ -2,8 +2,16 @@
 import { db } from "../../config/database.connection.js";
 import { buildCustomerQueries } from "./utils/buildCustomerQueries.js";
 
-export async function getCustomers(_, res) {
+export async function getCustomers(req, res) {
+
+    const { cpf } = structuredClone(req.query)
+
     try {
+        if (cpf) {
+            const customers = await db.query("SELECT * FROM customers WHERE cpf LIKE $1", [`${cpf}`])
+            return res.send(customers.rows)
+        }
+
         const customers = await db.query("SELECT * FROM customers")
         return res.send(customers.rows)
 

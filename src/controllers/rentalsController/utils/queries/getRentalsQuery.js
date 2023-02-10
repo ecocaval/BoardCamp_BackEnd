@@ -8,8 +8,8 @@ export const getRentalsQuery = `
     rentals."daysRented",
     rentals."returnDate",
     rentals."originalPrice",
-
     rentals."delayFee",
+    
     json_build_object(
         'id', customers.id,
         'name', customers."name"

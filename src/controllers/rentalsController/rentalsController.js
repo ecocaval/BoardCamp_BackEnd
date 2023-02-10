@@ -5,8 +5,16 @@ import { getGamePricePerDayById } from "../gamesController/utils/getGamePricePer
 import { calculateDaysDiff } from "./utils/calculateDaysDiff..js";
 import { getRentalsQuery } from "./utils/queries/getRentalsQuery.js";
 
-export async function getRentals(_, res) {
+export async function getRentals(req, res) {
+
+    const { customerId } = structuredClone(req.query)
+
     try {
+        if (customerId) {
+            const games = await db.query('SELECT * FROM rentals WHERE "customerId" = $1', [customerId])
+            return res.send(games.rows)
+        }
+
         const rentals = await db.query(getRentalsQuery)
         return res.send(rentals.rows)
 
@@ -41,7 +49,7 @@ export async function finalizeRental(req, res) {
 
     try {
         const returnDate = new Date(Date.now())
-        
+
         const { rentDate, daysRented, gameId } = req.rental.rows[0]
 
         const pricePerDay = await getGamePricePerDayById(gameId)
