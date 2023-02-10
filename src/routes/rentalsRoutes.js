@@ -11,7 +11,7 @@ import { validateGameId } from "../middlewares/games/validateGameId.js";
 import { validateDaysRented } from "../middlewares/rentals/validateDaysRented.js";
 import { validateGamesInStock } from "../middlewares/games/validateGamesInStock.js";
 import { validateRentalId } from "../middlewares/rentals/validateRentalId.js";
-import { validateRentalIsFinalized } from "../middlewares/rentals/validateRentalIsFinalized.js";
+import { validateRentalIsFinalized, validateRentalIsNotFinalized } from "../middlewares/rentals/validateRentalIsFinalized.js";
 
 //* Schemas
 import { registerRentalSchema } from "../schemas/registerRentalSchema.js";
@@ -32,6 +32,6 @@ rentalsRouter.post(
 
 rentalsRouter.post('/rentals/:id/return', validateRentalId, validateRentalIsFinalized, finalizeRental)
 
-rentalsRouter.delete('/rentals/:id', validateRentalId, validateRentalIsFinalized, deleteRental)
+rentalsRouter.delete('/rentals/:id', validateRentalId, validateRentalIsNotFinalized, deleteRental)
 
 export default rentalsRouter
