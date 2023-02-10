@@ -6,7 +6,7 @@ import { calculateDaysDiff } from "./utils/calculateDaysDiff..js";
 import { getRentalsQuery } from "./utils/queries/getRentalsQuery.js";
 
 export async function getRentals(req, res) {
-    const { customerId, offset, limit } = structuredClone(req.query)
+    const { customerId, order, desc, offset, limit } = structuredClone(req.query)
 
     let query = getRentalsQuery
     let parameters = []
@@ -14,6 +14,10 @@ export async function getRentals(req, res) {
     if (customerId) {
         query += 'WHERE rentals."customerId" = $1';
         parameters.push(customerId)
+    }
+
+    if (order) {
+        query += ` ORDER BY ${order} ${(desc ? ' DESC' : '')}`
     }
 
     if (offset) {

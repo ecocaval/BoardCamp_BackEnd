@@ -4,14 +4,18 @@ import { buildCustomerQueries } from "./utils/buildCustomerQueries.js";
 
 export async function getCustomers(req, res) {
 
-    const { cpf, offset, limit } = structuredClone(req.query)
+    const { cpf, order, desc, offset, limit } = structuredClone(req.query)
 
     let query = "SELECT * FROM customers"
     let parameters = []
 
     if (cpf) {
-        query += ' WHERE cpf LIKE $1';
+        query += ' WHERE cpf LIKE $1'
         parameters.push(`${cpf}`)
+    }
+
+    if (order) {
+        query += ` ORDER BY ${order} ${(desc ? ' DESC' : '')}`
     }
 
     if (offset) {
@@ -23,8 +27,6 @@ export async function getCustomers(req, res) {
         query += " LIMIT $" + (parameters.length + 1)
         parameters.push(limit)
     }
-
-    console.log(query);
 
     try {
         const customers = await db.query(query, parameters)
@@ -84,5 +86,4 @@ export async function updateCustomerById(req, res) {
         console.log(err)
         return res.sendStatus(500)
     }
-    res.send()
 }
