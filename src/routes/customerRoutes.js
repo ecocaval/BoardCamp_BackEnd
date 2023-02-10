@@ -11,7 +11,6 @@ import {
 
 //* Middlewares
 import { validateSchema } from "../middlewares/validateSchema.js";
-import { validateCustomerBody } from "../middlewares/customers/validateCustomerBody.js";
 import { validateCustomerCpf } from "../middlewares/customers/validateCustomerCpf.js";
 
 //* Schemas
@@ -24,8 +23,8 @@ customerRouter.get("/customers", getCustomers)
 
 customerRouter.get("/customers/:id", getCustomerById)
 
-customerRouter.post("/customers", validateSchema(registerCustomerSchema), validateCustomerBody, validateCustomerCpf, registerCostumer)
+customerRouter.post("/customers", validateSchema(registerCustomerSchema), validateCustomerCpf, registerCostumer)
 
-customerRouter.put("/customers/:id", validateSchema(updateCustomerSchema), validateCustomerBody, validateCustomerCpf, updateCustomerById)
+customerRouter.put("/customers/:id", validateSchema(updateCustomerSchema), validateCustomerCpf, updateCustomerById)
 
 export default customerRouter
