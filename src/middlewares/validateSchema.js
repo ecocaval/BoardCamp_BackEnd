@@ -10,7 +10,7 @@ export function validateSchema(schema) {
 
         if (error) {
             const errorMessage = error.details.map(err => err.message).join(", ")
-            return res.status(422).json({ message: errorMessage })
+            return res.status(400).json({ message: errorMessage })
         }
 
         next()

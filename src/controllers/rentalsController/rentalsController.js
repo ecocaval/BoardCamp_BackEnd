@@ -30,7 +30,7 @@ export async function getRentals(req, res) {
 
 export async function registerRental(req, res) {
     const { customerId, gameId, daysRented } = structuredClone(req.sanitizedBody)
-    const rentDate = dayjs(Date.now()).format('DD/MM/YYYY')
+    const rentDate = dayjs(Date.now()).format('YYYY-MM-DD')
     const gamePricePerDay = await getGamePricePerDayById(gameId)
     const originalPrice = gamePricePerDay * daysRented
 
@@ -60,7 +60,7 @@ export async function finalizeRental(req, res) {
 
         let daysDiff = calculateDaysDiff(rentDate, daysRented, returnDate)
 
-        const delayFee = pricePerDay * daysDiff * 100
+        const delayFee = pricePerDay * daysDiff
 
         await db.query(
             `UPDATE rentals SET "delayFee" = $1, "returnDate" = $2 

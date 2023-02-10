@@ -1,14 +1,7 @@
 export const getRentalsQuery = `
     SELECT
 
-    rentals.id,
-    rentals."customerId",
-    rentals."gameId",
-    rentals."rentDate",
-    rentals."daysRented",
-    rentals."returnDate",
-    rentals."originalPrice",
-    rentals."delayFee",
+    rentals.*,
     
     json_build_object(
         'id', customers.id,
