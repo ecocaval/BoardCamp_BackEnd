@@ -2,19 +2,29 @@
 import { db } from "../../config/database.connection.js";
 
 export async function getGames(req, res) {
+    
+    const { name, offset, limit } = structuredClone(req.query)
+    let query = "SELECT * FROM games"
+    let parameters = []
 
-    const { name } = structuredClone(req.query)
+    if (name) {
+        query += " WHERE name LIKE $1"
+        parameters.push(`${name}%`)
+    }
+
+    if (offset) {
+        query += " OFFSET $" + (parameters.length + 1)
+        parameters.push(offset)
+    }
+
+    if (limit) {
+        query += " LIMIT $" + (parameters.length + 1)
+        parameters.push(limit)
+    }
 
     try {
-        if (name) {
-            const games = await db.query("SELECT * FROM games WHERE name LIKE $1", [`${name}%`])
-            return res.send(games.rows)
-        }
-
-        const games = await db.query("SELECT * FROM games")
-
+        const games = await db.query(query, parameters)
         return res.send(games.rows)
-
     } catch (err) {
         console.log(err)
         return res.sendStatus(500)
