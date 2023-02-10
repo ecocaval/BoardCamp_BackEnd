@@ -2,6 +2,7 @@
 import dayjs from "dayjs";
 import { db } from "../../config/database.connection.js";
 import { getGamePricePerDayById } from "../gamesController/utils/getGamePricePerDayById.js";
+import { getAddaptedQuery } from "../utils/getAddaptedQuery.js";
 import { calculateDaysDiff } from "./utils/calculateDaysDiff..js";
 import { getRentalsQuery } from "./utils/queries/getRentalsQuery.js";
 
@@ -11,24 +12,12 @@ export async function getRentals(req, res) {
     let query = getRentalsQuery
     let parameters = []
 
-    if (customerId) {
-        query += 'WHERE rentals."customerId" = $1';
-        parameters.push(customerId)
-    }
-
-    if (order) {
-        query += ` ORDER BY ${order} ${(desc ? ' DESC' : '')}`
-    }
-
-    if (offset) {
-        query += "OFFSET $" + (parameters.length + 1)
-        parameters.push(offset)
-    }
-
-    if (limit) {
-        query += "LIMIT $" + (parameters.length + 1)
-        parameters.push(limit)
-    }
+    query = getAddaptedQuery(
+        "rentals", { customerId },
+        order, desc,
+        offset, limit,
+        query, parameters
+    )
 
     try {
         const rentals = await db.query(query, parameters)

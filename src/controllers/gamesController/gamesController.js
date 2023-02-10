@@ -1,5 +1,6 @@
 //* Configs
 import { db } from "../../config/database.connection.js";
+import { getAddaptedQuery } from "../utils/getAddaptedQuery.js";
 
 export async function getGames(req, res) {    
     const { name, order, desc, offset, limit } = structuredClone(req.query)
@@ -7,24 +8,12 @@ export async function getGames(req, res) {
     let query = "SELECT * FROM games"
     let parameters = []
 
-    if (name) {
-        query += " WHERE name LIKE $1"
-        parameters.push(`${name}%`)
-    }
-
-    if (order) {
-        query += ` ORDER BY ${order} ${(desc ? ' DESC' : '')}`
-    }
-
-    if (offset) {
-        query += " OFFSET $" + (parameters.length + 1)
-        parameters.push(offset)
-    }
-
-    if (limit) {
-        query += " LIMIT $" + (parameters.length + 1)
-        parameters.push(limit)
-    }
+    query = getAddaptedQuery(
+        "games", { name },
+        order, desc,
+        offset, limit,
+        query, parameters
+    )
 
     try {
         const games = await db.query(query, parameters)

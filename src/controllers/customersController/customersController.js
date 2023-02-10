@@ -1,5 +1,6 @@
 //* Configs
 import { db } from "../../config/database.connection.js";
+import { getAddaptedQuery } from "../utils/getAddaptedQuery.js";
 import { buildCustomerQueries } from "./utils/buildCustomerQueries.js";
 
 export async function getCustomers(req, res) {
@@ -7,26 +8,14 @@ export async function getCustomers(req, res) {
     const { cpf, order, desc, offset, limit } = structuredClone(req.query)
 
     let query = "SELECT * FROM customers"
-    let parameters = []
+    const parameters = []
 
-    if (cpf) {
-        query += ' WHERE cpf LIKE $1'
-        parameters.push(`${cpf}`)
-    }
-
-    if (order) {
-        query += ` ORDER BY ${order} ${(desc ? ' DESC' : '')}`
-    }
-
-    if (offset) {
-        query += " OFFSET $" + (parameters.length + 1)
-        parameters.push(offset)
-    }
-
-    if (limit) {
-        query += " LIMIT $" + (parameters.length + 1)
-        parameters.push(limit)
-    }
+    query = getAddaptedQuery(
+        "customers", { cpf },
+        order, desc,
+        offset, limit,
+        query, parameters
+    )
 
     try {
         const customers = await db.query(query, parameters)
