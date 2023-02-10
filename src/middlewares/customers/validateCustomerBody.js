@@ -4,7 +4,7 @@ export function validateCustomerBody(req, res, next) {
 
     const { name, phone, cpf, birthday } = structuredClone(req.sanitizedBody)
 
-    const nameValidation = name ? (name !== "") : true
+    const nameValidation = (name !== "")
     const phoneValidation = phone ? (phone.length === 10 || phone.length === 11) : true
     const dateValidation = birthday ? dateRegex.test(birthday) : true
     const cpfValidation = cpf ? cpf.length === 11 : true
