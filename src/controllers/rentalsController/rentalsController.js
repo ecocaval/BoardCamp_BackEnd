@@ -17,7 +17,7 @@ export async function getRentals(req, res) {
         order, desc,
         offset, limit,
         query, parameters,
-        {gameId}
+        { gameId }
     )
 
     try {

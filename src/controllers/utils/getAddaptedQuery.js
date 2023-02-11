@@ -16,7 +16,7 @@ export function getAddaptedQuery(
         }
     }
 
-    if(additionalFilterOption) {
+    if(Object.values(additionalFilterOption)[0]) {
         if(parameters.length === 0) {
             query += ` WHERE rentals."${Object.keys(additionalFilterOption)[0]}" = $1`;
         } else {
