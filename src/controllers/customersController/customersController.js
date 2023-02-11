@@ -1,5 +1,7 @@
 //* Configs
 import { db } from "../../config/database.connection.js";
+
+//* Utils
 import { getAddaptedQuery } from "../utils/getAddaptedQuery.js";
 import { buildCustomerQueries } from "./utils/buildCustomerQueries.js";
 

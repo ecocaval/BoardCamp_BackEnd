@@ -1,13 +1,21 @@
-//* Configs
+//* Libraries
 import dayjs from "dayjs";
+
+//* Configs
 import { db } from "../../config/database.connection.js";
+
+//* Utils
 import { getGamePricePerDayById } from "../gamesController/utils/getGamePricePerDayById.js";
 import { getAddaptedQuery } from "../utils/getAddaptedQuery.js";
 import { calculateDaysDiff } from "./utils/calculateDaysDiff..js";
+import { filterRentalsByStartDate } from "./utils/filterRentalsByStartDate.js";
+import { filterRentalsByStatus } from "./utils/filterRentalsByStatus.js";
+
+//* Queries
 import { getRentalsQuery } from "./utils/queries/getRentalsQuery.js";
 
 export async function getRentals(req, res) {
-    const { customerId, gameId, order, desc, offset, limit } = structuredClone(req.query)
+    const { customerId, gameId, order, desc, offset, limit, status, startDate } = structuredClone(req.query)
 
     let query = getRentalsQuery
     let parameters = []
@@ -21,7 +29,11 @@ export async function getRentals(req, res) {
     )
 
     try {
-        const rentals = await db.query(query, parameters)
+        let rentals = await db.query(query, parameters)
+
+        if (status) rentals = filterRentalsByStatus(rentals, status)
+        if (startDate) rentals = filterRentalsByStartDate(rentals, startDate)
+
         return res.send(rentals.rows)
     } catch (err) {
         console.log(err)
