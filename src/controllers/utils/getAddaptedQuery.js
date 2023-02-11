@@ -26,7 +26,7 @@ export function getAddaptedQuery(
     }
 
     if (order) {
-        query += ` ORDER BY ${order}${(desc ? ' DESC' : '')}`
+        query += ` ORDER BY "${order}"${(desc ? ' DESC' : '')}`
     }
 
     if (offset) {
