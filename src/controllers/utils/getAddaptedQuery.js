@@ -2,7 +2,8 @@ export function getAddaptedQuery(
     table, filterOption,
     order, desc,
     offset, limit,
-    query, parameters
+    query, parameters,
+    additionalFilterOption
 ) {
 
     if (Object.values(filterOption)[0]) {
@@ -13,6 +14,15 @@ export function getAddaptedQuery(
             query += ` WHERE ${Object.keys(filterOption)[0]} LIKE $1`
             parameters.push(`${Object.values(filterOption)[0]}%`)
         }
+    }
+
+    if(additionalFilterOption) {
+        if(parameters.length === 0) {
+            query += ` WHERE rentals."${Object.keys(additionalFilterOption)[0]}" = $1`;
+        } else {
+            query += ` AND rentals."${Object.keys(additionalFilterOption)[0]}" = $2`;
+        }
+        parameters.push(Object.values(additionalFilterOption)[0])
     }
 
     if (order) {
