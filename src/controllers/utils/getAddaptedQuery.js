@@ -6,7 +6,7 @@ export function getAddaptedQuery(
     additionalFilterOption
 ) {
 
-    if (additionalFilterOption ? Object.values(filterOption)[0] : false) {
+    if (filterOption ? Object.values(filterOption)[0] : false) {
         if (table === "rentals") {
             query += ` WHERE rentals."${Object.keys(filterOption)[0]}" = $1`;
             parameters.push(Object.values(filterOption)[0])
